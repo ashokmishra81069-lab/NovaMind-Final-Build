@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04  # Stable version for Buildozer
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -22,19 +22,17 @@ jobs:
           sudo apt update
           sudo apt install -y build-essential git ffmpeg libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev libportmidi-dev libswscale-dev libavformat-dev libavcodec-dev zlib1g-dev libgstreamer1.0-gstreamer-lite-dev libgstreamer1.0-dev gstreamer1.0-plugins-base gstreamer1.0-plugins-good
           sudo apt install -y libsqlite3-dev sqlite3 bzip2 libbz2-dev libssl-dev openssl libgdbm-dev liblzma-dev libreadline-dev tk-dev libffi-dev libexpat1-dev libbluetooth-dev
-
-      - name: Install Buildozer and Cython
-        run: |
           pip install --user --upgrade Cython==0.29.33 buildozer
-          export PATH=$PATH:$HOME/.local/bin
 
       - name: Build APK with Buildozer
         run: |
           export PATH=$PATH:$HOME/.local/bin
-          # Yes/No prompts ko auto-accept karne ke liye yes command use ki hai
+          # Forcefully accepting all licenses and running build
           yes | buildozer android debug
         env:
-          ACCEPT_SDK_LICENSE: "yes"
+          # In variables ke bina build fail ho jati hai
+          APP_ANDROID_ACCEPT_SDK_LICENSE: "1"
+          GRADLE_OPTS: "-Dorg.gradle.daemon=false"
 
       - name: Upload Finished APK
         uses: actions/upload-artifact@v4
