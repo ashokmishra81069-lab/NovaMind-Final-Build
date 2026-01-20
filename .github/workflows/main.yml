@@ -20,11 +20,12 @@ jobs:
           sudo apt update
           sudo apt install -y build-essential git ffmpeg libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev libportmidi-dev libswscale-dev libavformat-dev libavcodec-dev zlib1g-dev libgstreamer1.0-gstreamer-lite-dev libgstreamer1.0-dev gstreamer1.0-plugins-base gstreamer1.0-plugins-good libsqlite3-dev sqlite3 bzip2 libbz2-dev libssl-dev openssl libgdbm-dev liblzma-dev libreadline-dev tk-dev libffi-dev libexpat1-dev libbluetooth-dev
           pip install --upgrade pip
-          pip install --user Cython==0.29.33 buildozer
+          pip install --user "Cython<3.0.0" buildozer
 
       - name: Build with Buildozer
         run: |
           export PATH=$PATH:$HOME/.local/bin
+          # Force accepting licenses
           yes | buildozer android debug
         env:
           APP_ANDROID_ACCEPT_SDK_LICENSE: "1"
