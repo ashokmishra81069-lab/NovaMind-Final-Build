@@ -2,12 +2,10 @@ name: NovaMind AI Final Build
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
 
 jobs:
   build:
-    runs-on: ubuntu-22.04  # Stable version for Buildozer
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -20,25 +18,21 @@ jobs:
       - name: Install System Dependencies
         run: |
           sudo apt update
-          sudo apt install -y build-essential git ffmpeg libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev libportmidi-dev libswscale-dev libavformat-dev libavcodec-dev zlib1g-dev libgstreamer1.0-gstreamer-lite-dev libgstreamer1.0-dev gstreamer1.0-plugins-base gstreamer1.0-plugins-good
-          sudo apt install -y libsqlite3-dev sqlite3 bzip2 libbz2-dev libssl-dev openssl libgdbm-dev liblzma-dev libreadline-dev tk-dev libffi-dev libexpat1-dev libbluetooth-dev
-          pip install --user --upgrade Cython==0.29.33 buildozer
+          sudo apt install -y build-essential git ffmpeg libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev libportmidi-dev libswscale-dev libavformat-dev libavcodec-dev zlib1g-dev libgstreamer1.0-gstreamer-lite-dev libgstreamer1.0-dev gstreamer1.0-plugins-base gstreamer1.0-plugins-good libsqlite3-dev sqlite3 bzip2 libbz2-dev libssl-dev openssl libgdbm-dev liblzma-dev libreadline-dev tk-dev libffi-dev libexpat1-dev libbluetooth-dev
+          pip install --upgrade pip
+          pip install --user Cython==0.29.33 buildozer
 
-      - name: Build APK with Buildozer
+      - name: Build with Buildozer
         run: |
           export PATH=$PATH:$HOME/.local/bin
-          # Forcefully accepting all licenses and running build
           yes | buildozer android debug
         env:
-          # In variables ke bina build fail ho jati hai
           APP_ANDROID_ACCEPT_SDK_LICENSE: "1"
           GRADLE_OPTS: "-Dorg.gradle.daemon=false"
 
-      - name: Upload Finished APK
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: NovaMind-AI-Build
           path: bin/*.apk
-          if-no-files-found: error
-
           
