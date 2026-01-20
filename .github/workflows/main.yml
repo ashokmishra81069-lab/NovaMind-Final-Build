@@ -40,3 +40,4 @@ jobs:
           name: NovaMind-AI-Build
           path: bin/*.apk
           if-no-files-found: error
+          
